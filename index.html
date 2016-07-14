@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+            <meta charset="utf-8">
+            <title>Simple Polylines</title>
+            <style>
+                html, body, #map-canvas {
+                    height: 100%;
+                    margin: 0px;
+                    padding: 0px;
+                }
+
+                body {
+                    display: flex;
+                }
+
+                #map-canvas {
+                    flex-grow: 1;
+
+                }
+
+                #controls-column {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                #csv-text-box {
+                    width: 480px;
+                    flex-grow: 1;
+                    white-space: pre;
+                    overflow: auto;
+                }
+
+                .range-input {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 700px;
+                    background-color: white;
+                    padding: 5px;
+                }
+                
+                .range-input input {
+                    vertical-align: middle;
+                }
+
+                .range-input input[type=range] {
+                    width: 420px;
+                }
+
+                .palette {
+                    width: 50px;
+                    height: 20px;
+                    display: inline-block;
+                    margin-left: 10px;
+                }
+
+                .legend-wrapper {
+                    padding: 10px;
+                }
+
+                .loader-icon {
+                    width: 64px;
+                    z-index: 2;
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                }
+
+                .loader-icon-background {
+                    opacity: 0.1;
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    background-color: #c7c7c7;
+                    z-index: 1;
+                }
+
+                .loader-wrapper {
+                    display: none;
+                }
+            </style>
+        </head>
+<body>
+
+<div class="loader-wrapper">
+    <img src="loader.gif" class="loader-icon" alt="process_icon"/>
+    <div class="loader-icon-background"></div>
+</div>
+
+<div id="map-canvas"></div>
+<div class="range-input">
+    <input type="range" min="0" max="100" step="1" value="0" class="js-range">
+    <input type="number" name="quantity" min="1" max="5" class="js-number">
+    <select class="js-select">
+        <option value="all" selected="true">all</option>
+    </select>
+</div>
+
+<div id="controls-column">
+    <button id="draw-polylines-button" onclick="buttonClickHandler()">Put on map</button>
+    <input type=file class='js-upload-file' name='uploadfile'>
+    <!--<textarea id="csv-text-box" spellcheck="false" placeholder="Place here a csv with columns quadkey,time,distribution,type"></textarea>-->
+    <div class="legend-wrapper">
+        <h4>Legend</h4>
+        <div class="legend"></div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false"></script>
+<script src="http://papaparse.com/resources/js/papaparse.js"></script>
+<script src="qk.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
