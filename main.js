@@ -175,6 +175,7 @@ Drawer.prototype = {
         var range = $('.js-range');
         var loader = $('.loader-wrapper');
         var s = $('.js-select');
+        var that = this;
 
         for (var i = 0; i < this.data.currentTypes().length; i++) {
             var t = this.data.currentTypes()[i];
@@ -192,29 +193,32 @@ Drawer.prototype = {
             var delta = (max - min) / 200;
 
             for (var j = 0; j < this.data.pointer[t].length; j++) {
-                var value = this.data.pointer[t][j];
-                var rect = this.drawQuadkey(value.quadkey,
-                    this.pickColor(parseFloat(value.distribution),
-                        t,
-                        delta,
-                        min));
+                (function() {
+                    var value = that.data.pointer[t][j];
+                    var rect = that.drawQuadkey(value.quadkey,
+                        that.pickColor(parseFloat(value.distribution),
+                            t,
+                            delta,
+                            min));
 
-                // todo fix
-                google.maps.event.addListener(rect, 'click', function (e) {
-                    this.infoWindow.setContent(value.quadkey + ': ' + value.distribution);
-                    this.infoWindow.setPosition(e.latLng);
-                    this.infoWindow.open(this.map);
-                }.bind(this));
+                    // todo fix
+                    google.maps.event.addListener(rect, 'click', function (e) {
+                        that.infoWindow.setContent(value.quadkey + ': ' + value.distribution);
+                        that.infoWindow.setPosition(e.latLng);
+                        that.infoWindow.open(that.map);
+                    }.bind(that));
 
-                google.maps.event.addListenerOnce(this.map, 'idle', function () {
-                    // number.removeAttr('disabled');
-                    // range.removeAttr('disabled');
-                    // loader.css('display', 'none');
-                });
 
-                var location = this.quadkeyCoord(value.quadkey);
-                var point = new google.maps.LatLng(location.lat, location.lng);
-                this.bbox.extend(point);
+                    // google.maps.event.addListenerOnce(that.map, 'idle', function () {
+                        // number.removeAttr('disabled');
+                        // range.removeAttr('disabled');
+                        // loader.css('display', 'none');
+                    // });
+
+                    var location = that.quadkeyCoord(value.quadkey);
+                    var point = new google.maps.LatLng(location.lat, location.lng);
+                    that.bbox.extend(point);
+                })();
             }
         }
 
