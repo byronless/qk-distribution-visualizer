@@ -4,6 +4,7 @@ var Data = function () {
 
 Data.prototype = {
     values: [],
+    time: [],
     types: [],
     lastTime: 0,
     pointer: null,
@@ -17,6 +18,7 @@ Data.prototype = {
             this.pointer[o.Action] = [];
             this.types.push(o.Action);
             this.values.push(this.pointer);
+            this.time.push(new Date(parseInt(o.Timestamp)).toUTCString());
             this.size++;
             this.pos = this.size - 1;
         }
@@ -32,7 +34,7 @@ Data.prototype = {
 
         this.pointer[o.Action].push({
             quadkey: o.QKeyId,
-            distribution: parseFloat(o.Probability),
+            distribution: parseFloat(o.PedestrianProbability) + parseFloat(o.VehicleProbability),
         });
     },
 
@@ -43,6 +45,10 @@ Data.prototype = {
 
     currentTypes: function () {
         return Object.keys(this.pointer);
+    },
+
+    currentTime: function () {
+        return this.time[this.pos];
     },
 
     closest: function (pos, type) {
@@ -105,8 +111,17 @@ Drawer.prototype = {
         this.rects = [];
     },
 
-    afterUpload: function () {
-        this.data.setPosition(0);
+    showTime: function () {
+        var t = $('.js-time');
+        t.html('');
+        t.append(this.data.currentTime());
+    },
+
+    buildInfoTable: function () {
+
+    },
+
+    initSelectors: function () {
         var number = $('.js-number');
         number.val(0);
         number.attr('min', 0);
@@ -127,17 +142,23 @@ Drawer.prototype = {
         s.append($("<option selected='true'></option>")
             .attr("value", "all")
             .text("all"));
+
         $.each(selectValues, function (key, value) {
             s.append($("<option></option>")
                 .attr("value", value)
                 .text(value));
         });
+    },
+
+    afterUpload: function () {
+        this.data.setPosition(0);
+        this.initSelectors();
+        this.showTime();
 
         this.drawQuadkeys();
     },
 
-    change: function (val, s) {
-        this.data.setPosition(val);
+    changeSelectorsValue: function (val) {
         var number = $('.js-number');
         number.val(val);
         // number.attr('disabled', 'disabled');
@@ -145,9 +166,16 @@ Drawer.prototype = {
         var range = $('.js-range');
         range.val(val);
         // range.attr('disabled', 'disabled');
+    },
+
+    change: function (val, s) {
+        this.data.setPosition(val);
+        this.changeSelectorsValue(val);
 
         // var loader = $('.loader-wrapper');
         // loader.css('display', 'block');
+
+        this.showTime();
 
         var selectValues = {};
         for (var i = 0; i < this.data.currentTypes().length; i++) {
