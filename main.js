@@ -35,6 +35,7 @@ Data.prototype = {
         this.pointer[o.Action].push({
             quadkey: o.QKeyId,
             distribution: parseFloat(o.PedestrianProbability) + parseFloat(o.VehicleProbability),
+            // distribution: parseFloat(o.VehicleProbability),
         });
     },
 
@@ -168,13 +169,17 @@ Drawer.prototype = {
         // range.attr('disabled', 'disabled');
     },
 
+    filterQuadkey: function(qk) {
+         this.drawQuadkey(qk, {
+             border: '#000000',
+             fill: '#000000',
+             opacity: '1',
+         });
+    },
+
     change: function (val, s) {
         this.data.setPosition(val);
         this.changeSelectorsValue(val);
-
-        // var loader = $('.loader-wrapper');
-        // loader.css('display', 'block');
-
         this.showTime();
 
         var selectValues = {};
@@ -235,13 +240,6 @@ Drawer.prototype = {
                         that.infoWindow.setPosition(e.latLng);
                         that.infoWindow.open(that.map);
                     }.bind(that));
-
-
-                    // google.maps.event.addListenerOnce(that.map, 'idle', function () {
-                        // number.removeAttr('disabled');
-                        // range.removeAttr('disabled');
-                        // loader.css('display', 'none');
-                    // });
 
                     var location = that.quadkeyCoord(value.quadkey);
                     var point = new google.maps.LatLng(location.lat, location.lng);
@@ -361,6 +359,10 @@ google.maps.event.addDomListener(window, 'load', d.initialize.bind(d));
 
 function buttonClickHandler() {
     d.buttonClickHandler();
+}
+
+function quadkeyFilterHandler() {
+    d.filterQuadkey($('.js-quadkey-filter').val());
 }
 
 $('.js-range').change(function (e) {
