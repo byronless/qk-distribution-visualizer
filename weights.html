@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+            <meta charset="utf-8">
+            <title>Quadkey in time distribution visualizer</title>
+            <style>
+                html, body, #map-canvas {
+                    height: 100%;
+                    margin: 0px;
+                    padding: 0px;
+                }
+
+                body {
+                    display: flex;
+                }
+
+                #map-canvas {
+                    flex-grow: 1;
+
+                }
+
+                #controls-column {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                #csv-text-box {
+                    width: 480px;
+                    flex-grow: 1;
+                    white-space: pre;
+                    overflow: auto;
+                }
+
+                .range-input {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 700px;
+                    background-color: white;
+                    padding: 5px;
+                }
+
+                .range-input input {
+                    vertical-align: middle;
+                }
+
+                .range-input input[type=range] {
+                    width: 420px;
+                }
+
+                .palette {
+                    width: 50px;
+                    height: 20px;
+                    display: inline-block;
+                    margin-left: 10px;
+                }
+
+                .legend-wrapper {
+                    padding: 10px;
+                }
+
+                .loader-icon {
+                    width: 64px;
+                    z-index: 2;
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                }
+
+                .loader-icon-background {
+                    opacity: 0.1;
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    background-color: #c7c7c7;
+                    z-index: 1;
+                }
+
+                .loader-wrapper {
+                    display: none;
+                }
+            </style>
+        </head>
+<body>
+
+<div class="loader-wrapper">
+    <img src="loader.gif" class="loader-icon" alt="process_icon"/>
+    <div class="loader-icon-background"></div>
+</div>
+
+<div id="map-canvas"></div>
+
+<div id="controls-column">
+    <button id="draw-polylines-button" onclick="buttonClickHandler()">Put on map</button>
+    <input type=file class='js-upload-file' name='uploadfile'>
+    <!--<textarea id="csv-text-box" spellcheck="false" placeholder="Place here a csv with columns quadkey,time,distribution,type"></textarea>-->
+    <div class="legend-wrapper">
+        <h4>Legend</h4>
+        <div class="js-time"></div>
+        <div class="legend"></div>
+        <div><input type="text" class="js-quadkey-filter"/></div>
+        <button id="js-quadkey-filter-button" onclick="quadkeyFilterHandler()">Find quadkey</button>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false"></script>
+<script src="papaparse.js"></script>
+<script src="qk.js"></script>
+<script src="weights.js"></script>
+
+<!--<script>-->
+    <!--$.ajax({-->
+        <!--url: 'https://analytics-population-movement.qa.inrix.com/v1/populationDensityInBox?startDate=2016-09-17T00:00:00Z&endDate=2016-09-18T00:00:00Z&corner1=25.239943%7c55.217075&corner2=25.127242%7c55.242080&levelOfDetail=17',-->
+        <!--type: "GET",-->
+        <!--contentType: 'application/json',-->
+        <!--beforeSend: function (xhr) {-->
+            <!--xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6ImI2OWFhZGRkLTkwMDgtNDgzMy05NDNhLTk2YzUwZjI2MzE2MyIsImV4cGlyeSI6IjIwMTYtMTEtMDlUMjA6MzM6NDguMzYzMjg0N1oiLCJleHAiOjE0Nzg3MjM2MjgsInJvbGUiOiJzZXJ2aWNlIiwiYXBwUm9sZSI6MywiZGV2ZWxvcGVySWQiOiI1NWFiNjE3ZS0zOGI2LTQ1NDEtYTAxMi0zNDY1ZjNmZTg1MDgifQ.jFDyQczk4Jx6twO07Q9uqsB0z3udCVSqe7fEybiPHe4');-->
+        <!--},-->
+        <!--success: function (response) {-->
+            <!--console.log(response);-->
+        <!--},-->
+        <!--error: function (response) {-->
+            <!--console.log(response);-->
+        <!--}-->
+
+    <!--})-->
+
+<!--</script>-->
+
+</body>
+</html>
